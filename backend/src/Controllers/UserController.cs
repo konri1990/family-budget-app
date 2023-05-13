@@ -1,5 +1,7 @@
 using FamilyBudgetAppApi.DataAccess;
 using FamilyBudgetAppApi.Domain;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +20,7 @@ public class UserController : ControllerBase
         _context = context;
     }
 
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet]
     public async Task<IEnumerable<User>> Get(int pageSize = 10, int page = 1)
     {
