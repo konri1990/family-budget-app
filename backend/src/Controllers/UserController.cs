@@ -1,5 +1,7 @@
+using FamilyBudgetAppApi.DataAccess;
 using FamilyBudgetAppApi.Domain;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace FamilyBudgetAppApi.Controllers;
 
@@ -8,20 +10,17 @@ namespace FamilyBudgetAppApi.Controllers;
 public class UserController : ControllerBase
 {
     private readonly ILogger<UserController> _logger;
+    private readonly FamilyBudgetContext _context;
 
-    public UserController(ILogger<UserController> logger)
+    public UserController(ILogger<UserController> logger, FamilyBudgetContext context)
     {
         _logger = logger;
+        _context = context;
     }
 
     [HttpGet]
-    public IEnumerable<User> Get(int take = 10, int skip = 0)
+    public async Task<IEnumerable<User>> Get(int pageSize = 10, int page = 1)
     {
-        return Enumerable.Range(1, 5).Select(index => new User
-        {
-            Id = index,
-            Name = $"Test User{index}"
-        })
-        .ToArray();
+        return await _context.User!.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
     }
 }
