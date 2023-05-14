@@ -1,7 +1,19 @@
 .icon {
-  @apply w-6 h-6;
+  @apply w-4 h-4 m-1;
 }
 
 .paginationList {
-  @apply grid grid-cols-10 list-none;
+  @apply flex items-center justify-center space-x-2;
+}
+
+.paginationText {
+  @apply max-w-screen-lg text-sm text-gray-300 font-medium;
+}
+
+.paginationChoosePage {
+  @apply flex;
+}
+
+.paginationChoosePageLabel {
+  @apply flex flex-col mt-2 mb-2 mr-1 text-sm font-medium paginationText;
 }

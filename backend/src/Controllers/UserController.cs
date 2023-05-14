@@ -20,7 +20,7 @@ public class UserController : ControllerBase
         _context = context;
     }
 
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet]
     public async Task<IEnumerable<User>> Get(int pageSize = 10, int page = 1)
     {

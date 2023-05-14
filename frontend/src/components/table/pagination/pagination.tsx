@@ -1,26 +1,19 @@
-import { ReactElement, useCallback } from "react";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
-
-interface IPaginationButtonProps {
-  content: number | ReactElement;
-  onClick: () => void;
-  active?: boolean;
-  disabled?: boolean;
-}
+import {
+  ChevronDoubleLeftIcon,
+  ChevronDoubleRightIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from "@heroicons/react/24/outline";
 
 import styles from "./pagination.module.css";
 import Button from "components/atoms/button";
 
-const PaginationButton = (props: IPaginationButtonProps) => {
-  return (
-    <Button onClick={props.onClick} disabled={props.disabled}>
-      {props.content}
-    </Button>
-  );
-};
-
 export interface IPaginationProps {
   gotoPage: (pageIndex: number) => void;
+  previousPage: () => void;
+  nextPage: () => void;
+  setPageSize: (pageIndex: number) => void;
+  pageSize: number;
   canPreviousPage: boolean;
   canNextPage: boolean;
   pageCount: number;
@@ -28,64 +21,66 @@ export interface IPaginationProps {
 }
 
 export const Pagination = (props: IPaginationProps) => {
-  const { gotoPage, canPreviousPage, canNextPage, pageCount, pageIndex } =
-    props;
-
-  const renderPageLinks = useCallback(() => {
-    if (pageCount === 0) return null;
-    const visiblePageButtonCount = 3;
-    let numberOfButtons =
-      pageCount < visiblePageButtonCount ? pageCount : visiblePageButtonCount;
-    const pageIndices = [pageIndex];
-    numberOfButtons--;
-    [...Array(numberOfButtons)].forEach((_item, itemIndex) => {
-      const pageNumberBefore = pageIndices[0] - 1;
-      const pageNumberAfter = pageIndices[pageIndices.length - 1] + 1;
-      if (
-        pageNumberBefore >= 0 &&
-        (itemIndex < numberOfButtons / 2 || pageNumberAfter > pageCount - 1)
-      ) {
-        pageIndices.unshift(pageNumberBefore);
-      } else {
-        pageIndices.push(pageNumberAfter);
-      }
-    });
-    return pageIndices.map((pageIndexToMap) => (
-      <li key={pageIndexToMap}>
-        <PaginationButton
-          content={pageIndexToMap + 1}
-          onClick={() => gotoPage(pageIndexToMap)}
-          active={pageIndex === pageIndexToMap}
-        />
-      </li>
-    ));
-  }, [pageCount, pageIndex, gotoPage]);
+  const {
+    gotoPage,
+    canPreviousPage,
+    canNextPage,
+    pageCount,
+    pageIndex,
+    previousPage,
+    nextPage,
+    setPageSize,
+    pageSize,
+  } = props;
 
   return (
-    <ul className={styles.paginationList}>
-      <li>
-        <PaginationButton
-          content={
-            <div className={styles.icon}>
-              <ChevronLeftIcon />
-            </div>
-          }
-          onClick={() => gotoPage(0)}
-          disabled={canPreviousPage}
+    <div className={styles.paginationList}>
+      <Button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+        <ChevronDoubleLeftIcon className={styles.icon} />
+      </Button>
+      <Button onClick={() => previousPage()} disabled={!canPreviousPage}>
+        <ChevronLeftIcon className={styles.icon} />
+      </Button>
+      <Button onClick={() => nextPage()} disabled={!canNextPage}>
+        <ChevronRightIcon className={styles.icon} />
+      </Button>
+      <Button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+        <ChevronDoubleRightIcon className={styles.icon} />
+      </Button>
+      <div className={styles.paginationText}>
+        Page <strong>{pageIndex + 1}</strong>{" "}
+      </div>
+      <div className={styles.paginationChoosePage}>
+        <label
+          htmlFor="pagination_page"
+          className={styles.paginationChoosePageLabel}
+        >
+          | Go to page:{"     "}
+        </label>
+        <input
+          type="number"
+          id="pagination_page"
+          value={pageIndex + 1}
+          onChange={(e) => {
+            const page = e.target.value ? Number(e.target.value) - 1 : 0;
+            gotoPage(page);
+          }}
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 flex flex-col w-4/6 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Select page..."
         />
-      </li>
-      {renderPageLinks()}
-      <li>
-        <PaginationButton
-          content={
-            <div className={styles.icon}>
-              <ChevronRightIcon />
-            </div>
-          }
-          onClick={() => gotoPage(pageCount - 1)}
-          disabled={!canNextPage}
-        />
-      </li>
-    </ul>
+      </div>{" "}
+      <select
+        value={pageSize}
+        onChange={(e) => {
+          setPageSize(Number(e.target.value));
+        }}
+      >
+        {[3, 5, 10, 15, 20].map((pageSize) => (
+          <option key={pageSize} value={pageSize}>
+            Show {pageSize}
+          </option>
+        ))}
+      </select>
+    </div>
   );
 };

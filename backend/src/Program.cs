@@ -71,6 +71,16 @@ builder.Services.AddSwaggerGen(c => {
         } 
     });
 });
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:5173");
+            builder.AllowAnyHeader();
+            builder.AllowAnyMethod();
+        });
+});
 
 var app = builder.Build();
 
@@ -82,10 +92,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-builder.Services.AddAuthorization();
 app.UseAuthorization();
-
+app.UseCors();
 app.MapControllers();
 
 SeedDatabase();
