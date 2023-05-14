@@ -1,0 +1,7 @@
+.icon {
+  @apply w-6 h-6;
+}
+
+.paginationList {
+  @apply grid grid-cols-10 list-none;
+}

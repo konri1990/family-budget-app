@@ -7,6 +7,12 @@ import {
 } from "@heroicons/react/24/outline";
 
 import styles from "./app.module.css";
+import { useMemo } from "react";
+import {
+  familyMembersColumns,
+  familyMembersData,
+} from "components/table/dummy";
+import Table from "components/table/table";
 
 const features = [
   {
@@ -38,6 +44,10 @@ const features = [
 ];
 
 const App = (): JSX.Element => {
+  const data = useMemo(() => familyMembersData(), []);
+
+  const columns = useMemo(() => familyMembersColumns(), []);
+
   return (
     <main className={styles.main}>
       <header className={styles.header}>
@@ -53,6 +63,9 @@ const App = (): JSX.Element => {
           :)
         </p>
       </header>
+      <section className={styles.tableContainer}>
+        <Table columns={columns} data={data} />
+      </section>
       <section className={styles.features}>
         {features.map((props, index) => (
           <div

@@ -1,0 +1,22 @@
+.table {
+  @apply bg-white bg-opacity-5 rounded-md shadow p-4 relative overflow-hidden h-full;
+}
+
+.tableProps {
+  @apply min-w-full divide-y text-[gold] opacity-75;
+}
+
+.headerColumnProps {
+  @apply px-6 py-5 text-left text-lg font-medium text-[gold] opacity-75 uppercase rounded-sm tracking-wider;
+}
+
+.tableBody {
+  @apply divide-y text-white font-bold transition tracking-wide;
+}
+
+.row {
+  @apply hover:text-blue-400 hover:underline hover:cursor-pointer;
+}
+.cell {
+  @apply px-6 py-10 whitespace-nowrap;
+}
