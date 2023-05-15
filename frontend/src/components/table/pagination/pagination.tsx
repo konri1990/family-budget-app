@@ -55,7 +55,7 @@ export const Pagination = (props: IPaginationProps) => {
           htmlFor="pagination_page"
           className={styles.paginationChoosePageLabel}
         >
-          | Go to page:{"     "}
+          | Go to page:{" "}
         </label>
         <input
           type="number"

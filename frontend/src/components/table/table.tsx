@@ -8,13 +8,15 @@ import { Pagination } from "./pagination/pagination";
 export interface ITableProps {
   columns: Column[];
   data: User[];
-  setPage: (page: number) => void;
+  setQueryPageIndex: (page: number) => void;
+  setQueryPageSize: (page: number) => void;
   queryPageIndex: number;
   queryPageSize: number;
 }
 
 const Table = (props: ITableProps) => {
-  const { setPage, queryPageIndex, queryPageSize } = props;
+  const { setQueryPageIndex, queryPageIndex, setQueryPageSize, queryPageSize } =
+    props;
   const {
     getTableProps,
     getTableBodyProps,
@@ -44,9 +46,12 @@ const Table = (props: ITableProps) => {
   );
 
   useEffect(() => {
-    console.log(`from table-${pageIndex}`);
-    setPage(pageIndex + 1);
-  }, [pageIndex, setPage]);
+    setQueryPageIndex(pageIndex + 1);
+  }, [pageIndex, setQueryPageIndex]);
+
+  useEffect(() => {
+    setQueryPageSize(pageSize);
+  }, [pageSize, setQueryPageSize]);
 
   return (
     <div className={styles.table}>
