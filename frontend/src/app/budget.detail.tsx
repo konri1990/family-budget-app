@@ -1,25 +1,31 @@
-import { Budget, BudgetItem, BudgetItemType } from "components/table/domain";
+import { BudgetItem, BudgetItemType } from "components/table/domain";
 import Table from "components/table/table";
-import { BudgetQuery, getBudgets } from "queries/budgetsQuery";
+import { BudgetDetailQuery, getBudgetDetails } from "queries/budgetsQuery";
 import { useMemo, useState } from "react";
 import { useQuery } from "react-query";
 import { Column } from "react-table";
 
 import styles from "./budgets.module.css";
-import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
-const Budgets = () => {
+type BudgetRoute = {
+  budgetId: string;
+};
+
+const BudgetDetails = () => {
   const [queryPageIndex, setPageSize] = useState<number>(1);
   const [queryPageSize, setPage] = useState<number>(3);
-  const { isLoading, isError, data, isSuccess } = useQuery<Budget[], Error>(
-    ["budgets", queryPageIndex, queryPageSize],
+  const { budgetId } = useParams<BudgetRoute>();
+  const { isLoading, isError, data, isSuccess } = useQuery<BudgetItem[], Error>(
+    ["budgetsDetails", queryPageIndex, queryPageSize, budgetId],
     () =>
-      getBudgets({
+      getBudgetDetails({
+        budgetId: Number(budgetId) || 0,
         pageSize: queryPageSize,
         page: queryPageIndex,
-      } as BudgetQuery),
+      } as BudgetDetailQuery),
     {
-      keepPreviousData: true,
+      keepPreviousData: false,
       staleTime: Infinity,
     }
   );
@@ -29,30 +35,20 @@ const Budgets = () => {
       {
         Header: "Id",
         accessor: "id",
-        Cell: (props: { value: number }) => {
-          return <Link to={"/budget/" + props.value}>{props.value}</Link>;
-        },
       },
       {
         Header: "Name",
         accessor: "name",
       },
       {
-        Header: "Owner",
-        accessor: "owner.name",
+        Header: "Value",
+        accessor: "value",
       },
       {
-        Header: "Budget Value",
-        accessor: "items",
-        Cell: (props: { value: BudgetItem[] }) => {
-          const sum = props.value.reduce((accumulator, budgetItem) => {
-            if (budgetItem.type === BudgetItemType.Expense)
-              return accumulator - budgetItem.value;
-            if (budgetItem.type === BudgetItemType.Income)
-              return accumulator + budgetItem.value;
-            return 0;
-          }, 0);
-          return <span>{sum}</span>;
+        Header: "Type",
+        accessor: "type",
+        Cell: (props: { value: number }) => {
+          return <span>{BudgetItemType[props.value]}</span>;
         },
       },
     ],
@@ -61,7 +57,6 @@ const Budgets = () => {
 
   return (
     <>
-      <Link to={"/budgets"}> Budgets </Link>;
       <section className={styles.tableContainer}>
         {isSuccess && (
           <Table
@@ -80,4 +75,4 @@ const Budgets = () => {
   );
 };
 
-export default Budgets;
+export default BudgetDetails;
