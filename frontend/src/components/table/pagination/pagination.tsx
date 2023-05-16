@@ -7,6 +7,7 @@ import {
 
 import styles from "./pagination.module.css";
 import Button from "components/atoms/button";
+import { useMemo } from "react";
 
 export interface IPaginationProps {
   gotoPage: (pageIndex: number) => void;
@@ -33,12 +34,19 @@ export const Pagination = (props: IPaginationProps) => {
     pageSize,
   } = props;
 
+  const isPreviousButtonDisabled: boolean = useMemo(() => {
+    return pageIndex >= 2 && !canPreviousPage;
+  }, [pageIndex, canPreviousPage]);
+
   return (
     <div className={styles.paginationList}>
-      <Button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+      <Button onClick={() => gotoPage(1)} disabled={isPreviousButtonDisabled}>
         <ChevronDoubleLeftIcon className={styles.icon} />
       </Button>
-      <Button onClick={() => previousPage()} disabled={!canPreviousPage}>
+      <Button
+        onClick={() => previousPage()}
+        disabled={isPreviousButtonDisabled}
+      >
         <ChevronLeftIcon className={styles.icon} />
       </Button>
       <Button onClick={() => nextPage()} disabled={!canNextPage}>
@@ -48,7 +56,7 @@ export const Pagination = (props: IPaginationProps) => {
         <ChevronDoubleRightIcon className={styles.icon} />
       </Button>
       <div className={styles.paginationText}>
-        Page <strong>{pageIndex + 1}</strong>{" "}
+        Page <strong>{pageIndex}</strong>{" "}
       </div>
       <div className={styles.paginationChoosePage}>
         <label
@@ -60,12 +68,12 @@ export const Pagination = (props: IPaginationProps) => {
         <input
           type="number"
           id="pagination_page"
-          value={pageIndex + 1}
+          value={pageIndex}
           onChange={(e) => {
-            const page = e.target.value ? Number(e.target.value) - 1 : 0;
-            gotoPage(page);
+            const page = e.target.value ? Number(e.target.value) : 1;
+            gotoPage(page <= 0 ? 1 : page);
           }}
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 flex flex-col w-4/6 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className={styles.paginationSelectPage}
           placeholder="Select page..."
         />
       </div>{" "}

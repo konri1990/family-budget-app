@@ -7,7 +7,6 @@ import {
 import Card from "components/organisms/card";
 
 import styles from "./home.module.css";
-import Menu from "components/menu/menu";
 
 const Home = () => {
   const features = [

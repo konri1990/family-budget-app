@@ -20,3 +20,15 @@
 .cell {
   @apply px-6 py-10 whitespace-nowrap;
 }
+
+.error {
+  @apply text-4xl font-bold text-red-500;
+}
+
+.loading {
+  @apply text-[gold] opacity-75 text-2xl;
+}
+
+.noData {
+  @apply text-white text-sm;
+}

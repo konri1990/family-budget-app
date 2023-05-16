@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using FamilyBudgetAppApi.DataAccess;
 using FamilyBudgetAppApi.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

@@ -4,7 +4,8 @@ public class Budget
 {
     public int Id { get; set; }
     public string Name { get; set; } = null!;
+    public int OwnerId { get; set; }
     public User Owner { get; set; } = null!;
-    public List<BudgetItem> Items { get; set; } = new();
-    public List<User> ListOfSharedUsers { get; set; } = new();
+    public ICollection<BudgetItem>? Items { get; set; }
+    public ICollection<User>? ListOfSharedUsers { get; set; }
 }
